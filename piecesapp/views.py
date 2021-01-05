@@ -23,7 +23,7 @@ cur = c.cursor()
 #Creating our logs db (pieces_logs, board_logs)
 cur.execute("CREATE TABLE IF NOT EXISTS pieces_logs (pieceid INT UNIQUE, piecename TEXT, piececolor TEXT, createddate TEXT)") 
 c.commit()
-cur.execute("CREATE TABLE IF NOT EXISTS board_logs (movimentid INT UNIQUE, piecename TEXT, piececolor TEXT, movimentdate TEXT, possiblepositions TEXT, FOREIGN KEY (movimentid) REFERENCES pieces_logs (pieceid))")
+cur.execute("CREATE TABLE IF NOT EXISTS board_logs (movementid INT UNIQUE, piecename TEXT, piececolor TEXT, movementdate TEXT, possiblepositions TEXT, FOREIGN KEY (movementid) REFERENCES pieces_logs (pieceid))")
 c.commit
 chess_board = np.array([['a1','a2','a3','a4','a5','a6','a7','a8'], #our board is an numpy array using algebric notation
                        ['b1','b2','b3','b4','b5','b6','b7','b8'],
@@ -92,16 +92,16 @@ class BoardAPIView(APIView):
             color = piecedatacolor
             result = np.where(chess_board==position)  #Here will save the indexes of choosen position
 
-            ##MOVIMENTS##
+            ##movementS##
             #Knight:
-            def knight_moviment():
+            def knight_movement():
                 possible_to_do = [] #This list will receive our positions     
                 indexes = []            
                 for i in result:
                     indexes.append(int(i)) 
                 try:     
-                    possibilidade = chess_board[int(indexes[0])+2][int(indexes[1])+1]
-                    possible_to_do.append(possibilidade)     
+                    possible = chess_board[int(indexes[0])+2][int(indexes[1])+1]
+                    possible_to_do.append(possible)     
                 except:
                     pass
                 #These try is just to prevent fails if the next position doesn't exist
@@ -110,64 +110,64 @@ class BoardAPIView(APIView):
                         #These "if's" along all the movements functions   
                         #is to prevent that the piece   
                         #goes from position a8 to h1, for exemple.                 
-                        possibilidade = chess_board[int(indexes[0])+2][int(indexes[1])-1]         
-                        possible_to_do.append(possibilidade)                                
+                        possible = chess_board[int(indexes[0])+2][int(indexes[1])-1]         
+                        possible_to_do.append(possible)                                
                 except:
                     pass
                 try:    
                     if int(indexes[0]-2)>-1:        
-                        possibilidade = chess_board[int(indexes[0])-2][int(indexes[1])+1]
-                        possible_to_do.append(possibilidade)         
+                        possible = chess_board[int(indexes[0])-2][int(indexes[1])+1]
+                        possible_to_do.append(possible)         
                 except:
                     pass
                 try:
                     if int(indexes[1])-1 > -1 and int(indexes[0])-2>-1:            
-                        possibilidade = chess_board[int(indexes[0])-2][int(indexes[1])-1]
-                        possible_to_do.append(possibilidade)              
+                        possible = chess_board[int(indexes[0])-2][int(indexes[1])-1]
+                        possible_to_do.append(possible)              
                 except:
                     pass
                 try:        
-                    possibilidade = chess_board[int(indexes[0])+1][int(indexes[1])+2]
-                    possible_to_do.append(possibilidade)       
+                    possible = chess_board[int(indexes[0])+1][int(indexes[1])+2]
+                    possible_to_do.append(possible)       
                 except:
                     pass   
                 try:
                     if int(indexes[1]-2)>-1:          
-                        possibilidade = chess_board[int(indexes[0])+1][int(indexes[1])-2]
-                        possible_to_do.append(possibilidade)            
+                        possible = chess_board[int(indexes[0])+1][int(indexes[1])-2]
+                        possible_to_do.append(possible)            
                 except:
                     pass    
                 try:
                     if int(indexes[1]+2) > -1 and int(indexes[0] -1) > -1:       
-                        possibilidade = chess_board[int(indexes[0])-1][int(indexes[1])+2]
-                        possible_to_do.append(possibilidade)
+                        possible = chess_board[int(indexes[0])-1][int(indexes[1])+2]
+                        possible_to_do.append(possible)
                 except:
                     pass   
                 try:
                     if int(indexes[1])-2 > -1 and int(indexes[0]-1) > -1:
-                        possibilidade = chess_board[int(indexes[0])-1][int(indexes[1])-2]
-                        possible_to_do.append(possibilidade) 
+                        possible = chess_board[int(indexes[0])-1][int(indexes[1])-2]
+                        possible_to_do.append(possible) 
                 except:
                     pass 
                 #Returning the positions
                 return possible_to_do 
             #Pawn:
             ##black:
-            def black_pawn_moviment():
+            def black_pawn_movement():
                 possible_to_do = []          
                 indexes = []
                 for i in result:
                     indexes.append(int(i))
                 for i in range (0,3):
                     try:
-                        possibilidade = chess_board[int(indexes[0])+i][int(indexes[1])]
-                        possible_to_do.append(possibilidade)          
+                        possible = chess_board[int(indexes[0])+i][int(indexes[1])]
+                        possible_to_do.append(possible)          
                         if int(indexes[0])+i > 7:
                             break
                     except:
                         pass   
             ##white:         
-            def white_pawn_moviment():
+            def white_pawn_movement():
                 possible_to_do = []          
                 indexes = []              
                 for i in result:
@@ -176,121 +176,121 @@ class BoardAPIView(APIView):
                     try:           
                         if int(indexes[0])-i < 0:
                             break                 
-                        possibilidade = chess_board[int(indexes[0])-i][int(indexes[1])]
-                        possible_to_do.append(possibilidade)
+                        possible = chess_board[int(indexes[0])-i][int(indexes[1])]
+                        possible_to_do.append(possible)
                     except:
                         pass
             #King:
-            def king_moviment():   
+            def king_movement():   
                 possible_to_do = []
                 indexes = []                
                 for i in result:
                     indexes.append(int(i))               
                 try: 
-                    possibilidade = chess_board[int(indexes[0])+1][int(indexes[1])]
-                    possible_to_do.append(possibilidade)    
+                    possible = chess_board[int(indexes[0])+1][int(indexes[1])]
+                    possible_to_do.append(possible)    
                 except:
                     pass 
                 try:   
-                    possibilidade = chess_board[int(indexes[0])][int(indexes[1])+1]
-                    possible_to_do.append(possibilidade)     
+                    possible = chess_board[int(indexes[0])][int(indexes[1])+1]
+                    possible_to_do.append(possible)     
                 except:
                     pass
                 try:       
                     if int(indexes[0])-1>-1:
-                        possibilidade = chess_board[int(indexes[0])-1][int(indexes[1])]
-                        possible_to_do.append(possibilidade)         
+                        possible = chess_board[int(indexes[0])-1][int(indexes[1])]
+                        possible_to_do.append(possible)         
                 except:
                     pass 
                 try:
                     if int(indexes[1])-1>-1:
-                        possibilidade = chess_board[int(indexes[0])][int(indexes[1])-1]
-                        possible_to_do.append(possibilidade)      
+                        possible = chess_board[int(indexes[0])][int(indexes[1])-1]
+                        possible_to_do.append(possible)      
                 except:
                     pass 
                 try:      
                     if int(indexes[1])-1 > -1:
-                        possibilidade = chess_board[int(indexes[0])+1][int(indexes[1])-1]
-                        possible_to_do.append(possibilidade)     
+                        possible = chess_board[int(indexes[0])+1][int(indexes[1])-1]
+                        possible_to_do.append(possible)     
                 except:
                     pass 
                 try:       
                     if int(indexes[0])-1>-1:
-                        possibilidade = chess_board[int(indexes[0])-1][int(indexes[1])+1]
-                        possible_to_do.append(possibilidade)
+                        possible = chess_board[int(indexes[0])-1][int(indexes[1])+1]
+                        possible_to_do.append(possible)
                 except:
                     pass
                 try:    
-                    possibilidade = chess_board[int(indexes[0])+1][int(indexes[1])+1]
-                    possible_to_do.append(possibilidade)                
+                    possible = chess_board[int(indexes[0])+1][int(indexes[1])+1]
+                    possible_to_do.append(possible)                
                 except:
                     pass 
                 try:    
                     if int(indexes[0])-1>-1 and int(indexes[1])-1 > -1:
-                        possibilidade = chess_board[int(indexes[0])-1][int(indexes[1])-1]
-                        possible_to_do.append(possibilidade)         
+                        possible = chess_board[int(indexes[0])-1][int(indexes[1])-1]
+                        possible_to_do.append(possible)         
                 except:
                     pass 
                 return possible_to_do          
             #Queen:
-            def queen_moviment():
+            def queen_movement():
                 possible_to_do = []
                 indexes = []                
                 for i in result:
                     indexes.append(int(i)) 
                 try:       
                     for i in range(0,7):
-                        possibilidade = chess_board[int(indexes[0])+i][int(indexes[1])-i]
-                        possible_to_do.append(possibilidade)
+                        possible = chess_board[int(indexes[0])+i][int(indexes[1])-i]
+                        possible_to_do.append(possible)
                 except:
                     pass 
                 try:   
                     for i in range(0,7):
-                        possibilidade = chess_board[int(indexes[0])-i][int(indexes[1])+i]
-                        possible_to_do.append(possibilidade)
+                        possible = chess_board[int(indexes[0])-i][int(indexes[1])+i]
+                        possible_to_do.append(possible)
                 except:
                     pass
                 try:        
                     for i in range(0,7):
-                        possibilidade = chess_board[int(indexes[0])+i][int(indexes[1])+i]
-                        possible_to_do.append(possibilidade)
+                        possible = chess_board[int(indexes[0])+i][int(indexes[1])+i]
+                        possible_to_do.append(possible)
                 except:
                     pass 
                 try: 
                     for i in range(0,7):
-                        possibilidade = chess_board[int(indexes[0])-i][int(indexes[1])-i]
-                        possible_to_do.append(possibilidade)
+                        possible = chess_board[int(indexes[0])-i][int(indexes[1])-i]
+                        possible_to_do.append(possible)
                         if int(indexes[0])-i < 0 or int(indexes[1])-i < 0:
                             break
                 except:
                     pass 
                 try:  
                     for i in range(0,7):
-                        possibilidade = chess_board[int(indexes[0])+i][int(indexes[1])]
-                        possible_to_do.append(possibilidade)
+                        possible = chess_board[int(indexes[0])+i][int(indexes[1])]
+                        possible_to_do.append(possible)
                 except:
                     pass 
                 try:        
                     for i in range(0,7):
-                        possibilidade = chess_board[int(indexes[0])-i][int(indexes[1])]
-                        possible_to_do.append(possibilidade)
+                        possible = chess_board[int(indexes[0])-i][int(indexes[1])]
+                        possible_to_do.append(possible)
                 except:
                     pass
                 try:
                     for i in range(0,7):
-                        possibilidade = chess_board[int(indexes[0])][int(indexes[1])+i]
-                        possible_to_do.append(possibilidade)
+                        possible = chess_board[int(indexes[0])][int(indexes[1])+i]
+                        possible_to_do.append(possible)
                 except:
                     pass 
                 try:
                     for i in range(0,7):            
-                        possibilidade = chess_board[int(indexes[0])][int(indexes[1])-i]
-                        possible_to_do.append(possibilidade)
+                        possible = chess_board[int(indexes[0])][int(indexes[1])-i]
+                        possible_to_do.append(possible)
                 except:
                     pass 
                 return possible_to_do 
             #Bishop:
-            def bishop_moviment():
+            def bishop_movement():
                 possible_to_do = []          
                 indexes = []               
                 for i in result:
@@ -298,22 +298,22 @@ class BoardAPIView(APIView):
                 try: 
                     possible_to_do.append("1:") 
                     for i in range(0,7):
-                        possibilidade = chess_board[int(indexes[0])+i][int(indexes[1])-i]
-                        possible_to_do.append(possibilidade)
+                        possible = chess_board[int(indexes[0])+i][int(indexes[1])-i]
+                        possible_to_do.append(possible)
                 except:
                     pass 
                 try:    
                     possible_to_do.append("2:")     
                     for i in range(0,7):
-                        possibilidade = chess_board[int(indexes[0])-i][int(indexes[1])+i]
-                        possible_to_do.append(possibilidade)
+                        possible = chess_board[int(indexes[0])-i][int(indexes[1])+i]
+                        possible_to_do.append(possible)
                 except:
                     pass
                 try:
                     possible_to_do.append("3:") 
                     for i in range(0,7):
-                        possibilidade = chess_board[int(indexes[0])+i][int(indexes[1])+i]
-                        possible_to_do.append(possibilidade)
+                        possible = chess_board[int(indexes[0])+i][int(indexes[1])+i]
+                        possible_to_do.append(possible)
                 except:
                     pass 
                 try:
@@ -323,59 +323,59 @@ class BoardAPIView(APIView):
                             break
                         if int(indexes[0])-i >7 or int(indexes[1])-i > 7:
                             break           
-                        possibilidade = chess_board[int(indexes[0])-i][int(indexes[1])-i]
-                        possible_to_do.append(possibilidade)         
+                        possible = chess_board[int(indexes[0])-i][int(indexes[1])-i]
+                        possible_to_do.append(possible)         
                 except:
                     pass
                 return possible_to_do               
             #Rook
-            def rook_moviment():
+            def rook_movement():
                 possible_to_do = []          
                 indexes = []              
                 for i in result:
                     indexes.append(int(i))       
                 try:  
                     for i in range(0,7):
-                        possibilidade = chess_board[int(indexes[0])+i][int(indexes[1])]
-                        possible_to_do.append(possibilidade)
+                        possible = chess_board[int(indexes[0])+i][int(indexes[1])]
+                        possible_to_do.append(possible)
                 except:
                     pass 
                 try:        
                     for i in range(0,7):
-                        possibilidade = chess_board[int(indexes[0])-i][int(indexes[1])]
-                        possible_to_do.append(possibilidade)
+                        possible = chess_board[int(indexes[0])-i][int(indexes[1])]
+                        possible_to_do.append(possible)
                 except:
                     pass
                 try:
                     for i in range(0,7):
-                        possibilidade = chess_board[int(indexes[0])][int(indexes[1])+i]
-                        possible_to_do.append(possibilidade)
+                        possible = chess_board[int(indexes[0])][int(indexes[1])+i]
+                        possible_to_do.append(possible)
                 except:
                     pass 
                 try:
                     for i in range(0,7):
-                        possibilidade = chess_board[int(indexes[0])][int(indexes[1])-i]
-                        possible_to_do.append(possibilidade)
+                        possible = chess_board[int(indexes[0])][int(indexes[1])-i]
+                        possible_to_do.append(possible)
                 except:
                     pass   
                 return possible_to_do
                 
             if classe=="knight":                
-                moviments = knight_moviment()
+                movements = knight_movement()
             if classe == "pawn" and color == "black":
-                moviments = black_pawn_moviment()
+                movements = black_pawn_movement()
             elif classe == "pawn" and color == "white":
-                moviments = white_pawn_moviment()
+                movements = white_pawn_movement()
             elif classe == "rook":
-                moviments = rook_moviment()
+                movements = rook_movement()
             elif classe == "bishop":
-                moviments = bishop_moviment()
+                movements = bishop_movement()
             elif classe == "king":            
-                moviments = king_moviment()                
+                movements = king_movement()                
             elif classe == "queen":
-                moviments = queen_moviment() 
+                movements = queen_movement() 
             #Creating our board log:         
-            cur.execute("INSERT INTO board_logs (movimentid, piecename, piececolor, movimentdate, possiblepositions) VALUES(?,?,?,?,?)", (1, piecedataname, piecedatacolor, datetime.now(), str(moviments)))  
+            cur.execute("INSERT INTO board_logs (movementid, piecename, piececolor, movementdate, possiblepositions) VALUES(?,?,?,?,?)", (1, piecedataname, piecedatacolor, datetime.now(), str(movements)))  
             c.commit()
             #Returning the informations to user:
             return Response({
@@ -383,7 +383,7 @@ class BoardAPIView(APIView):
                 'data':boardid,
                 'piece':piecedataname,
                 'position':position,
-                'possible moviments':moviments
+                'possible movements':movements
                        
             }, status = status.HTTP_201_CREATED)
         return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
