@@ -16,16 +16,16 @@ from datetime import datetime
 # like in knight movements, for exemple. 
 # I think the biggest problem is that there's a lot of trys, excepts and ifs in knight
 # while in pawns we have just 1. These was made because, while some pieces could 
-# simply just follow the for loop and pass through the conditions.
+# simply just follow the for loop and pass through the conditions, other pieces needed to make a curve.
 
 c = sqlite3.connect('db.sqlite3', check_same_thread=False)
 cur = c.cursor()
-#Creating our logs db (pieces_logs, board_logs)
+#Creating our logs in db (pieces_logs, board_logs)
 cur.execute("CREATE TABLE IF NOT EXISTS pieces_logs (pieceid INT UNIQUE, piecename TEXT, piececolor TEXT, createddate TEXT)") 
 c.commit()
 cur.execute("CREATE TABLE IF NOT EXISTS board_logs (movementid INT UNIQUE, piecename TEXT, piececolor TEXT, movementdate TEXT, possiblepositions TEXT, FOREIGN KEY (movementid) REFERENCES pieces_logs (pieceid))")
 c.commit
-chess_board = np.array([['a1','a2','a3','a4','a5','a6','a7','a8'], #our board is an numpy array using algebric notation
+chess_board = np.array([['a1','a2','a3','a4','a5','a6','a7','a8'], #our board is an numpy array that uses algebric notation
                        ['b1','b2','b3','b4','b5','b6','b7','b8'],
                        ['c1','c2','c3','c4','c5','c6','c7','c8'],
                        ['d1','d2','d3','d4','d5','d6','d7','d8'],
@@ -90,7 +90,7 @@ class BoardAPIView(APIView):
             position = serializer.data['position_x'] + serializer.data['position_y'] #position is equal to position_x and position_y from our requisition
             classe = piecedataname
             color = piecedatacolor
-            result = np.where(chess_board==position)  #Here will save the indexes of choosen position
+            result = np.where(chess_board==position)  #Here will save the indexes of chosen position
 
             ##movementS##
             #Knight:
@@ -104,7 +104,7 @@ class BoardAPIView(APIView):
                     possible_to_do.append(possible)     
                 except:
                     pass
-                #These try is just to prevent fails if the next position doesn't exist
+                #These 'try' and 'excepts' is just to prevent fails if the next position doesn't exist
                 try:                     
                     if int(indexes[1]) - 1 > -1:     
                         #These "if's" along all the movements functions   
